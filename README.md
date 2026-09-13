@@ -2,6 +2,12 @@
 
 UI tests for the Wikipedia Android app (`org.wikipedia`), written with [Maestro](https://maestro.dev/). 🤖📱
 
+## 📦 App under test
+
+- **Package**: `org.wikipedia`
+- **Source**: [wikimedia/apps-android-wikipedia](https://github.com/wikimedia/apps-android-wikipedia) — open source, licensed under the **Apache License 2.0**.
+- **Install**: [Play Store](https://play.google.com/store/apps/details?id=org.wikipedia), or grab an APK from the repo's [Releases](https://github.com/wikimedia/apps-android-wikipedia/releases) page.
+
 ## 🗂️ Project structure
 
 ```
