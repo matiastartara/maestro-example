@@ -1,11 +1,11 @@
 appId: org.wikipedia
 ---
 # Subflow: open the first search result and confirm the article title is visible.
-# Requires env var SEARCH_TERM to be set by the calling flow.
+# Requires env var SEARCH_TERM and elements/loadElements.yaml loaded by the calling flow.
 - tapOn:
     text: ${SEARCH_TERM}
     index: 1
 - tapOn:
-    id: "closeButton"
+    id: ${output.article.gamesPopupCloseBtn}
     optional: true # dismisses the "Introducing Wikipedia games" promo dialog when it shows up
 - assertVisible: ${SEARCH_TERM}

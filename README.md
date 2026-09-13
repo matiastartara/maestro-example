@@ -14,20 +14,58 @@ UI tests for the Wikipedia Android app (`org.wikipedia`), written with [Maestro]
 maestro-android/
 ├── flows/              # Full end-to-end tests (the ones you actually run)
 │   └── search_roma.yaml
-├── subflows/            # Reusable per-screen steps (Maestro's "page objects")
+├── elements/            # Page objects: locators, one JS file per page
+│   ├── loadElements.yaml     # loads every page file into `output`
+│   ├── onboarding.js
+│   ├── navigation.js
+│   ├── search.js
+│   └── article.js
+├── subflows/            # Reusable per-screen actions
 │   ├── onboarding.yaml       # dismisses the welcome carousel and opens the search tab
 │   ├── search_screen.yaml    # opens the search bar and types a term
 │   └── article_page.yaml     # opens the first result and asserts the title
 └── README.md
 ```
 
-Maestro doesn't have "Page Object" classes like Selenium/Appium: the closest
-equivalent is one subflow YAML per screen or action, composed from a flow via
-`runFlow`. Each subflow still needs its own header (`appId` + `---`) even
-though it's never run on its own.
+## 🧩 Page objects
+
+Maestro doesn't have Page Object classes like Playwright/Selenium. Following the
+[official POM recipe](https://docs.maestro.dev/examples/recipes/implementing-the-page-object-model-pom.md),
+a page object is split in two:
+
+- **Locators** → `elements/<page>.js`, exposed through the global `output` object:
+
+  ```js
+  // elements/search.js
+  output.search = {
+      searchBar: 'Search Wikipedia',
+      searchBarIndex: '1'
+  }
+  ```
+
+- **Actions** → `subflows/*.yaml`, which reference those locators:
+
+  ```yaml
+  - tapOn:
+      text: ${output.search.searchBar}
+      index: ${output.search.searchBarIndex}
+  ```
+
+Every flow loads all locators once, before anything else:
+
+```yaml
+- runFlow: ../elements/loadElements.yaml
+```
+
+➕ **Adding a new page**: create `elements/<page>.js` with `output.<page> = { ... }`,
+add `- runScript: <page>.js` to `elements/loadElements.yaml`, and reference
+`${output.<page>.<element>}` from subflows.
+
+Each subflow and `loadElements.yaml` still need their own header (`appId` + `---`)
+even though they're never run on their own.
 
 A flow (`flows/search_roma.yaml`) sets the `appId`, environment variables
-(`env`), and chains the subflows together:
+(`env`), loads the locators, and chains the subflows together:
 
 ```yaml
 appId: org.wikipedia
@@ -35,6 +73,7 @@ name: "Search a term and open the first result"
 env:
   SEARCH_TERM: "Roma"
 ---
+- runFlow: ../elements/loadElements.yaml
 - launchApp:
     clearState: true
 - runFlow: ../subflows/onboarding.yaml
@@ -81,13 +120,13 @@ maestro test flows/
 maestro studio
 ```
 
-Files under `subflows/` are never run directly: they're invoked by files in
-`flows/` through `runFlow`.
+Files under `subflows/` and `elements/` are never run directly: they're
+invoked by files in `flows/` through `runFlow`.
 
 ## 🤝 Using the Maestro MCP with Claude
 
-This project has the Maestro MCP server configured, which gives Claude tools
-to inspect the device and run flows without leaving the chat:
+With the Maestro MCP server added to Claude, Claude gets tools to inspect the
+device and run flows without leaving the chat:
 
 - 📋 `list_devices` — lists available emulators/simulators/browser and their `device_id`.
 - 🔍 `inspect_screen` — fetches the current screen's hierarchy (to find an element's real `id`/`text`).
@@ -102,5 +141,5 @@ Typical flow when asking Claude to write or fix a test:
 2. Ask "use the maestro mcp to..." — Claude will list devices, inspect the
    screen to confirm real selectors (never guessing them from a screenshot),
    and run the flow to validate it. ✅
-3. Changes land in the `.yaml` files under `flows/`/`subflows/`, and you can
+3. Changes land in `flows/`, `subflows/` and `elements/`, and you can
    re-run them yourself with `maestro test` as shown above. 🔁

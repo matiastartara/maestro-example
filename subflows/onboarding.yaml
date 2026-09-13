@@ -1,11 +1,11 @@
 appId: org.wikipedia
 ---
 # Subflow: dismiss the Wikipedia app onboarding carousel and open the search tab.
-# Assumes the app was just launched (see flows/*.yaml, which calls launchApp before this).
-- tapOn: "Forward"
-- tapOn: "Forward"
-- tapOn: "Forward"
-- tapOn: "Skip"
+# Requires elements/loadElements.yaml to be loaded by the calling flow.
+- tapOn: ${output.onboarding.forwardBtn}
+- tapOn: ${output.onboarding.forwardBtn}
+- tapOn: ${output.onboarding.forwardBtn}
+- tapOn: ${output.onboarding.skipBtn}
 - tapOn:
-    id: "navigation_bar_item_icon_view"
-    index: 2
+    id: ${output.navigation.tabIcon}
+    index: ${output.navigation.searchTabIndex}

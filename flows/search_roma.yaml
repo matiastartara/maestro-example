@@ -3,6 +3,7 @@ name: "Search a term and open the first result"
 env:
   SEARCH_TERM: "Roma"
 ---
+- runFlow: ../elements/loadElements.yaml
 - launchApp:
     clearState: true
 - runFlow: ../subflows/onboarding.yaml

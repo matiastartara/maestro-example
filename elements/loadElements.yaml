@@ -1,0 +1,8 @@
+appId: org.wikipedia
+---
+# Loads every page's locators into the global `output` object.
+# Add one runScript per new page file.
+- runScript: onboarding.js
+- runScript: navigation.js
+- runScript: search.js
+- runScript: article.js

@@ -1,8 +1,8 @@
 appId: org.wikipedia
 ---
 # Subflow: open the search field and type a query.
-# Requires env var SEARCH_TERM to be set by the calling flow.
+# Requires env var SEARCH_TERM and elements/loadElements.yaml loaded by the calling flow.
 - tapOn:
-    text: "Search Wikipedia"
-    index: 1
+    text: ${output.search.searchBar}
+    index: ${output.search.searchBarIndex}
 - inputText: ${SEARCH_TERM}

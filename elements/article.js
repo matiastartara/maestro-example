@@ -1,0 +1,3 @@
+output.article = {
+    gamesPopupCloseBtn: 'closeButton'
+}
