@@ -1,0 +1,15 @@
+# macOS
+.DS_Store
+
+# Editor/IDE
+.vscode/
+.idea/
+
+# Local Maestro debug output (only appears if you run with --debug-output,
+# or use takeScreenshot/startRecording with a path inside this repo)
+.maestro/
+*.mp4
+
+# Local env files (e.g. MAESTRO_CLOUD_API_KEY for cloud runs)
+.env
+.env.*

@@ -1,0 +1,8 @@
+appId: org.wikipedia
+---
+# Subflow: open the search field and type a query.
+# Requires env var SEARCH_TERM to be set by the calling flow.
+- tapOn:
+    text: "Search Wikipedia"
+    index: 1
+- inputText: ${SEARCH_TERM}
